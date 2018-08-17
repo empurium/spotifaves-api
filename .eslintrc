@@ -10,6 +10,7 @@
     "comma-dangle": 0,
     "consistent-return": 0,
     "implicit-arrow-linebreak": ["off"],
+    "arrow-parens": "off",
     "operator-linebreak": "off",
     "no-param-reassign": 0,
     "no-underscore-dangle": 0,
