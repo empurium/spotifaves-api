@@ -72,7 +72,6 @@ app.use(
 );
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(
   session({
@@ -90,7 +89,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === '/signup') {
     next();
   } else {
     lusca.csrf()(req, res, next);
