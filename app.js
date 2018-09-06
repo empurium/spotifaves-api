@@ -21,7 +21,7 @@ const multer = require('multer');
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.load();
 
 /**
  * Connect to DB with Sequelize.
@@ -190,15 +190,15 @@ app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
  * OAuth authentication routes. (Sign in)
  */
 app.get(
-  '/auth/facebook',
-  passport.authenticate('facebook', { scope: ['email', 'public_profile'] }),
+  '/auth/spotify',
+  passport.authenticate('spotify', {
+    scope: process.env.SPOTIFY_SCOPES,
+  }),
 );
 app.get(
-  '/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-  },
+  '/auth/spotify/callback',
+  passport.authenticate('spotify', { failureRedirect: '/login' }),
+  (req, res) => res.status(200).json({ message: 'Logged in successfully.' }),
 );
 
 /**
