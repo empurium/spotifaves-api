@@ -90,7 +90,7 @@ app.get(
 app.get(
   '/auth/spotify/callback',
   passport.authenticate('spotify', { failureRedirect: '/login' }),
-  (req, res) => res.status(200).json({ message: 'Logged in successfully.' }),
+  (req, res) => res.redirect(process.env.SPOTIFAVE_URL),
 );
 
 /**
