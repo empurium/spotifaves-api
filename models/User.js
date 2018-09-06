@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      password_reset_token: DataTypes.STRING,
-      password_reset_expires: DataTypes.STRING,
       photo_url: DataTypes.STRING,
       tokens: DataTypes.JSON,
       spotify_id: DataTypes.INTEGER.UNSIGNED,
