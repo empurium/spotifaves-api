@@ -1,4 +1,5 @@
 const passport = require('passport');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { Strategy: SpotifyStrategy } = require('passport-spotify');
 
 const models = require('../models');
@@ -8,13 +9,28 @@ passport.serializeUser((user, done) => {
 });
 
 /**
- * Should add some redis caching for this silly deserialization approach.
+ * JWT Strategy for stateless auth middleware.
+ * This strategy also handles deserializeUser().
  */
-passport.deserializeUser((id, done) => {
-  models.User.findById(id).then((user) => {
-    done(false, user.get({ plain: true }));
-  });
-});
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET,
+      issuer: 'spotifaves.com',
+      audience: 'spotifaves.com',
+    },
+    (jwtPayload, done) => {
+      models.User.findById(jwtPayload.sub).then((user) => {
+        if (!user) {
+          return done(true, false);
+        }
+
+        return done(null, user.get({ plain: true }));
+      });
+    },
+  ),
+);
 
 /**
  * Sign in with Spotify.
@@ -75,7 +91,7 @@ exports.isAuthenticated = (req, res, next) => {
  * Authorization Required middleware.
  */
 exports.isAuthorized = (req, res, next) => {
-  const token = req.user.tokens.find((token) => token.access_token === 'spotify');
+  const token = req.user.tokens.find((token) => token.access_token !== '');
 
   if (token) {
     next();

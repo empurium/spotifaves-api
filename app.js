@@ -1,13 +1,11 @@
 // require('newrelic');
 const express = require('express');
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
+const cors = require('cors');
 const lusca = require('lusca');
 const dotenv = require('dotenv');
 const passport = require('passport');
@@ -22,18 +20,12 @@ dotenv.load();
 /**
  * Connect to DB with Sequelize.
  */
-const db = require('./models');
-
-/**
- * Set up the Sequelize session store.
- * Create the session table if it doesn't exist with sync().
- */
-const sessionStore = new SequelizeStore({ db: db.sequelize });
-sessionStore.sync();
+require('./models');
 
 /**
  * Controllers (route handlers).
  */
+const authController = require('./controllers/auth');
 const apiController = require('./controllers/api');
 
 /**
@@ -49,19 +41,10 @@ app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.use(expressStatusMonitor());
 app.use(compression());
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
-app.use(cookieParser());
-app.use(
-  session({
-    store: sessionStore,
-    secret: process.env.SESSION_SECRET,
-    proxy: true, // for SSL outside of node
-    resave: false,
-    saveUninitialized: true,
-  }),
-);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(lusca.xframe('SAMEORIGIN'));
@@ -76,7 +59,7 @@ app.use((req, res, next) => {
  * API routes.
  */
 app.get('/', apiController.getIndex);
-app.get('/api/artists', apiController.getArtists);
+app.get('/api/artists', passport.authenticate('jwt'), apiController.getArtists);
 
 /**
  * OAuth authentication routes. (Sign in)
@@ -89,8 +72,8 @@ app.get(
 );
 app.get(
   '/auth/spotify/callback',
-  passport.authenticate('spotify', { failureRedirect: '/login' }),
-  (req, res) => res.redirect(process.env.SPOTIFAVE_URL),
+  passport.authenticate('spotify', { failureRedirect: process.env.SPOTIFAVE_URL }),
+  authController.getSpotifyCallback,
 );
 
 /**
