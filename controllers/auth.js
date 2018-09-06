@@ -9,6 +9,8 @@ exports.getSpotifyCallback = (req, res) => {
     sub: req.user.id,
     spotify_id: req.user.spotify_id,
     photo_url: req.user.photo_url,
+    access_token: req.user.tokens.access_token,
+    refresh_token: req.user.tokens.refresh_token,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, {

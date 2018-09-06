@@ -20,15 +20,7 @@ passport.use(
       issuer: 'spotifaves.com',
       audience: 'spotifaves.com',
     },
-    (jwtPayload, done) => {
-      models.User.findById(jwtPayload.sub).then((user) => {
-        if (!user) {
-          return done(true, false);
-        }
-
-        return done(null, user.get({ plain: true }));
-      });
-    },
+    (jwtPayload, done) => done(null, { id: jwtPayload.sub, ...jwtPayload }),
   ),
 );
 
