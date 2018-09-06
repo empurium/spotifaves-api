@@ -19,16 +19,19 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 
 /**
+ * Load environment variables from .env file, where API keys and passwords are configured.
+ */
+dotenv.load({ path: '.env.example' });
+
+/**
  * Connect to DB with Sequelize.
  */
 require('./models');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
-
 /**
- * Load environment variables from .env file, where API keys and passwords are configured.
+ * Multer uploader.
  */
-dotenv.load({ path: '.env.example' });
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Controllers (route handlers).
