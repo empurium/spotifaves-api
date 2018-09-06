@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       password_reset_expires: DataTypes.STRING,
       photo_url: DataTypes.STRING,
       tokens: DataTypes.JSON,
-      spotify: DataTypes.STRING,
+      spotify_id: DataTypes.INTEGER.UNSIGNED,
     },
     {},
   );
