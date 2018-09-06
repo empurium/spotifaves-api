@@ -18,6 +18,11 @@ const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
 
+/**
+ * Connect to DB with Sequelize.
+ */
+require('./config/sequelize');
+
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
@@ -163,6 +168,7 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * API examples routes.
  */
 app.get('/api', apiController.getApi);
+app.get('/api/artists', apiController.getArtists);
 app.get('/api/lastfm', apiController.getLastfm);
 app.get('/api/stripe', apiController.getStripe);
 app.post('/api/stripe', apiController.postStripe);
