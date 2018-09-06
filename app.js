@@ -23,15 +23,15 @@ dotenv.load();
 require('./models');
 
 /**
+ * Passport authentication configuration.
+ */
+require('./config/passport');
+
+/**
  * Controllers (route handlers).
  */
 const authController = require('./controllers/auth');
 const apiController = require('./controllers/api');
-
-/**
- * Passport authentication configuration.
- */
-require('./config/passport');
 
 /**
  * Express!
