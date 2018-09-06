@@ -21,7 +21,7 @@ const multer = require('multer');
 /**
  * Connect to DB with Sequelize.
  */
-require('./config/sequelize');
+require('./models');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 

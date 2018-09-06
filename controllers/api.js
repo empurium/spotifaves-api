@@ -2,7 +2,7 @@ const graph = require('fbgraph');
 const { LastFmNode } = require('lastfm');
 const stripe = require('stripe')(process.env.STRIPE_SKEY);
 const clockwork = require('clockwork')({ key: process.env.CLOCKWORK_KEY });
-const Artist = require('../models/Artist');
+const models = require('../models');
 
 /**
  * GET /api
@@ -18,7 +18,7 @@ exports.getApi = (req, res) => {
  * Quick test of Sequelize config.
  */
 exports.getArtists = (req, res) => {
-  Artist.findAll({}).then((artists) => {
+  models.Artist.findAll({}).then((artists) => {
     res.status(200).json({
       data: artists,
     });

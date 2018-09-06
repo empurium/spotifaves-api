@@ -1,8 +1,8 @@
-const { Sequelize, sequelize } = require('../config/sequelize');
+module.exports = (sequelize, DataTypes) => {
+  const Artist = sequelize.define('Artist', {
+    name: DataTypes.STRING,
+    albums: DataTypes.INTEGER,
+  });
 
-const Artist = sequelize.define('artists', {
-  name: Sequelize.STRING,
-  albums: Sequelize.INTEGER,
-});
-
-module.exports = Artist;
+  return Artist;
+};
