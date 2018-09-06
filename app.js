@@ -94,7 +94,7 @@ app.get(
 );
 
 /**
- * Error Handler. Only for development, shows
+ * Error Handler. Only for development, provides a cool /status.
  */
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
