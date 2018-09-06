@@ -2,21 +2,21 @@
 const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const lusca = require('lusca');
 const dotenv = require('dotenv');
-const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -26,7 +26,14 @@ dotenv.load();
 /**
  * Connect to DB with Sequelize.
  */
-require('./models');
+const db = require('./models');
+
+/**
+ * Set up the Sequelize session store.
+ * Create the session table if it doesn't exist with sync().
+ */
+const sessionStore = new SequelizeStore({ db: db.sequelize });
+sessionStore.sync();
 
 /**
  * Multer uploader.
@@ -52,19 +59,6 @@ const passportConfig = require('./config/passport');
 const app = express();
 
 /**
- * Connect to MongoDB.
- */
-mongoose.connect(
-  process.env.MONGODB_URI,
-  { useNewUrlParser: true },
-);
-mongoose.connection.on('error', (err) => {
-  console.error(err);
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  process.exit();
-});
-
-/**
  * Express configuration.
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
@@ -82,16 +76,14 @@ app.use(
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
+app.use(cookieParser());
 app.use(
   session({
-    resave: true,
-    saveUninitialized: true,
+    store: sessionStore,
     secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
-    store: new MongoStore({
-      url: process.env.MONGODB_URI,
-      autoReconnect: true,
-    }),
+    proxy: true, // for SSL outside of node
+    resave: false,
+    saveUninitialized: true,
   }),
 );
 app.use(passport.initialize());
