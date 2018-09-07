@@ -5,7 +5,7 @@ const models = require('../models');
  */
 exports.getIndex = (req, res) => {
   res.status(200).json({
-    message: "Hello friend! I'm an API!",
+    message: "Hello friend! I'm an API! 🤖",
   });
 };
 
