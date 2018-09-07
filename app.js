@@ -77,7 +77,7 @@ app.get(
 );
 
 /**
- * Error Handler. Only for development, provides a cool /status.
+ * Error Handler to show errors in response. Only for development.
  */
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
