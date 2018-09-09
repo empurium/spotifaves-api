@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 exports.getSpotifyCallback = (req, res) => {
   const payload = {
     sub: req.user.id,
+    name: req.user.name,
     spotify_id: req.user.spotify_id,
     photo_url: req.user.photo_url,
     access_token: req.user.tokens.access_token,
