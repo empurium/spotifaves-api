@@ -1,13 +1,12 @@
 {
-  "name": "hackathon-starter",
+  "name": "spotifaves-api",
   "version": "5.1.1",
-  "description": "A boilerplate for Node.js web applications",
+  "description": "See the new releases by your favorite artists on Spotify.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+	"url": "git://github.com/empurium/spotifaves-api.git"
   },
-  "author": "Sahat Yalkabov",
-  "license": "MIT",
+  "author": "Michael Simmons",
   "scripts": {
     "postinstall": "npm rebuild node-sass",
     "start": "node app.js",
