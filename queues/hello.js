@@ -26,6 +26,7 @@ helloQueue.process((job, done) => {
 
   setTimeout(() => {
     console.log(`Job ${job.id} complete!`);
+    job.progress(100);
     // done(new Error('Intentional error occurred!'));
     done();
   }, 20 * 1000);
