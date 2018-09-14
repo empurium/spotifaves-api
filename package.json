@@ -4,7 +4,7 @@
   "description": "See the new releases by your favorite artists on Spotify.",
   "repository": {
     "type": "git",
-	"url": "git://github.com/empurium/spotifaves-api.git"
+    "url": "git://github.com/empurium/spotifaves-api.git"
   },
   "author": "Michael Simmons",
   "scripts": {
@@ -17,6 +17,8 @@
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
+    "bull": "^3.4.8",
+    "bull-arena": "^2.4.5",
     "chalk": "^2.4.1",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
