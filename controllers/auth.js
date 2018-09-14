@@ -20,5 +20,5 @@ exports.getSpotifyCallback = (req, res) => {
     expiresIn: process.env.JWT_EXPIRES,
   });
 
-  res.redirect(`${process.env.SPOTIFAVE_URL}/#token=${token}`);
+  res.redirect(`${process.env.SPOTIFAVES_URL}/#token=${token}`);
 };

@@ -72,7 +72,7 @@ app.get(
 );
 app.get(
   '/auth/spotify/callback',
-  passport.authenticate('spotify', { failureRedirect: process.env.SPOTIFAVE_URL }),
+  passport.authenticate('spotify', { failureRedirect: process.env.SPOTIFAVES_URL }),
   authController.getSpotifyCallback,
 );
 
