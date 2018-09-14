@@ -28,6 +28,11 @@ require('./models');
 require('./config/passport');
 
 /**
+ * Configure Arena, the bull queue UI.
+ */
+const arenaConfig = require('./config/bull-arena');
+
+/**
  * Controllers (route handlers).
  */
 const authController = require('./controllers/auth');
@@ -39,6 +44,7 @@ const apiController = require('./controllers/api');
 const app = express();
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.disable('x-powered-by');
 app.use(expressStatusMonitor());
 app.use(compression());
 app.use(cors());
@@ -49,11 +55,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
-app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
+/**
+ * Arena, the bull queue UI.
+ */
+app.use('/', arenaConfig);
 
 /**
  * API routes.

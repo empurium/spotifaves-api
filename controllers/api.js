@@ -1,9 +1,12 @@
 const models = require('../models');
+const helloQueue = require('../queues/hello');
 
 /**
  * Hello from the API.
  */
 exports.getIndex = (req, res) => {
+  helloQueue.add({ message: 'Hello friend!' });
+
   res.status(200).json({
     message: "Hello friend! I'm an API! 🤖",
   });
