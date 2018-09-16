@@ -74,12 +74,7 @@ app.get('/api/artists', passport.authenticate('jwt'), apiController.getArtists);
 /**
  * OAuth authentication routes. (Sign in)
  */
-app.get(
-  '/auth/spotify',
-  passport.authenticate('spotify', {
-    scope: process.env.SPOTIFY_SCOPES,
-  }),
-);
+app.get('/auth/spotify', passport.authenticate('spotify', { scope: process.env.SPOTIFY_SCOPES }));
 app.get(
   '/auth/spotify/callback',
   passport.authenticate('spotify', { failureRedirect: process.env.SPOTIFAVES_URL }),
@@ -105,5 +100,14 @@ app.listen(app.get('port'), () => {
   );
   console.log('  Press CTRL-C to stop\n');
 });
+
+// Log unhandled exceptions instead of node exiting
+process
+  .on('unhandledRejection', (err, promise) => {
+    console.error(err, 'Unhandled Rejection at Promise', promise);
+  })
+  .on('uncaughtException', (err) => {
+    console.error(err, 'Uncaught Exception thrown');
+  });
 
 module.exports = app;
