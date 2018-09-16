@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken');
  * Create a JWT and send to the client for future API requests.
  */
 exports.getSpotifyCallback = (req, res) => {
+  if (typeof req.user !== 'object' || !req.user.tokens) {
+    res.redirect(`${process.env.SPOTIFAVES_URL}?login=error`);
+    return;
+  }
+
   const payload = {
     sub: req.user.id,
     name: req.user.name,
