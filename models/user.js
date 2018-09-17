@@ -5,8 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       photo_url: DataTypes.STRING,
-      tokens: DataTypes.JSON,
       spotify_id: DataTypes.INTEGER.UNSIGNED,
+      token_expires: DataTypes.INTEGER.UNSIGNED,
+      access_token: DataTypes.STRING,
+      refresh_token: DataTypes.STRING,
     },
     {},
   );

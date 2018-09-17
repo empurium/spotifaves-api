@@ -3,6 +3,7 @@ const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { Strategy: SpotifyStrategy } = require('passport-spotify');
 
 const models = require('../models');
+const { getTokenExpiration } = require('../utils/spotify');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -17,8 +18,8 @@ passport.use(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET,
-      issuer: 'spotifaves.com',
-      audience: 'spotifaves.com',
+      issuer: process.env.JWT_ISSUER,
+      audience: process.env.JWT_AUDIENCE,
     },
     (jwtPayload, done) => done(null, { id: jwtPayload.sub, ...jwtPayload }),
   ),
@@ -54,11 +55,9 @@ passport.use(
         name: profile.displayName,
         photo_url: photoUrl,
         spotify_id: profile.id,
-        tokens: {
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          expires_in: expiresIn,
-        },
+        token_expires: getTokenExpiration(expiresIn),
+        access_token: accessToken,
+        refresh_token: refreshToken,
       };
 
       // Create the user if we don't have this spotify_id
@@ -89,17 +88,4 @@ exports.isAuthenticated = (req, res, next) => {
   }
 
   res.status(401).json({ message: 'Unauthenticated.' });
-};
-
-/**
- * Authorization Required middleware.
- */
-exports.isAuthorized = (req, res, next) => {
-  const token = req.user.tokens.find((token) => token.access_token !== '');
-
-  if (token) {
-    next();
-  } else {
-    res.status(401).json({ message: 'Unauthorized.' });
-  }
 };

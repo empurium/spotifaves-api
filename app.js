@@ -70,6 +70,7 @@ app.use('/', arenaConfig);
  */
 app.get('/', apiController.getIndex);
 app.get('/api/artists', passport.authenticate('jwt'), apiController.getArtists);
+app.get('/api/refresh-token', passport.authenticate('jwt'), authController.getNewAccessToken);
 
 /**
  * OAuth authentication routes. (Sign in)

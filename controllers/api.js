@@ -1,10 +1,12 @@
 const models = require('../models');
 const helloQueue = require('../queues/hello');
 
+const apiController = {};
+
 /**
  * Hello from the API.
  */
-exports.getIndex = (req, res) => {
+apiController.getIndex = (req, res) => {
   helloQueue.add({ message: 'Hello friend!' });
 
   res.status(200).json({
@@ -15,10 +17,12 @@ exports.getIndex = (req, res) => {
 /**
  * Quick test of Sequelize config.
  */
-exports.getArtists = (req, res) => {
+apiController.getArtists = (req, res) => {
   models.Artist.findAll({}).then((artists) => {
     res.status(200).json({
       data: artists,
     });
   });
 };
+
+module.exports = apiController;
